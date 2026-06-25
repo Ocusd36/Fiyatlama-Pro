@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProAnaliz - Fiyatlama Pro</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-slate-50 antialiased text-gray-900 font-sans">
+
+    <div class="min-h-screen flex flex-col justify-between">
+        <header class="bg-white border-b border-slate-200 px-6 py-4 shadow-sm">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-blue-600 text-white p-2 rounded-xl shadow-md">
+                        <span class="text-xl font-bold">📊</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-slate-800 tracking-tight">ProAnaliz</h1>
+                        <p class="text-xs font-medium text-slate-500">Kurumsal Fiyatlama ve Karlılık Modülü</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-4 py-8 w-full flex-1">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+                        <h2 class="text-base font-bold text-slate-800 mb-6 flex items-center">
+                            <span class="w-2 h-4 bg-blue-600 rounded-sm mr-2 block"></span>
+                            Fiyatlama Parametreleri
+                        </h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">FTP / Kaynak Maliyeti (%)</label>
+                                <div class="relative">
+                                    <input type="number" id="kaynakMaliyeti" step="0.01" value="45.50" oninput="hesapla()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:border-blue-500 focus:bg-white text-slate-800" />
+                                    <span class="absolute right-4 top-3 text-slate-400 font-bold text-sm">%</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Hedef Brüt Kâr Marjı (%)</label>
+                                <div class="relative">
+                                    <input type="number" id="brutKarMarji" step="0.01" value="2.50" oninput="hesapla()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:border-blue-500 focus:bg-white text-slate-800" />
+                                    <span class="absolute right-4 top-3 text-slate-400 font-bold text-sm">%</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Vade (Gün)</label>
+                                <div class="relative">
+                                    <input type="number" id="vade" value="30" oninput="hesapla()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:border-blue-500 focus:bg-white text-slate-800" />
+                                    <span class="absolute right-4 top-3 text-slate-400 font-medium text-xs text-slate-500">Gün</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Komisyon Oranı (%)</label>
+                                <div class="relative">
+                                    <input type="number" id="komisyonOrani" step="0.01" value="1.25" oninput="hesapla()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:border-blue-500 focus:bg-white text-slate-800" />
+                                    <span class="absolute right-4 top-3 text-slate-400 font-bold text-sm">%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
+                        <h3 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Müşteri Teklif Oranı</h3>
+                        <p class="text-xs text-slate-400 mb-6 font-medium">BSMV ve Komisyonlar Dahil Efektif Getiri</p>
+                        
+                        <div class="mb-6">
+                            <span id="sonucEfektif" class="text-4xl font-black tracking-tight text-emerald-400">%0.00</span>
+                            <span class="text-xs text-slate-400 ml-2 block mt-1 font-semibold">Yıllık Efektif Maliyet Oranı</span>
+                        </div>
+
+                        <div class="border-t border-slate-700/50 pt-4 space-y-3">
+                            <div class="flex justify-between text-xs font-medium">
+                                <span class="text-slate-400">Yalın Faiz Oranı:</span>
+                                <span id="sonucYalin" class="font-bold text-slate-200">%0.00</span>
+                            </div>
+                            <div class="flex justify-between text-xs font-medium">
+                                <span class="text-slate-400">BSMV Etkisi (5%):</span>
+                                <span id="sonucBsmv" class="font-bold text-slate-200">%+0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <footer class="bg-white border-t border-slate-200 py-4 px-6 text-center text-xs text-slate-400 font-medium">
+            &copy; 2026 ProAnaliz Finansal Teknolojiler. Tüm hakları sabitlemiştir.
+        </footer>
+    </div>
+
+    <script>
+        function hesapla() {
+            const kaynakMaliyeti = parseFloat(document.getElementById('kaynakMaliyeti').value) || 0;
+            const brutKarMarji = parseFloat(document.getElementById('brutKarMarji').value) || 0;
+            const vade = parseInt(document.getElementById('vade').value) || 0;
+            const komisyonOrani = parseFloat(document.getElementById('komisyonOrani').value) || 0;
+            const bsmvOrani = 5.00;
+
+            const maliyetFaktoru = kaynakMaliyeti / 100;
+            const karFaktoru = brutKarMarji / 100;
+            const bsmvFaktoru = bsmvOrani / 100;
+            const komisyonFaktoru = komisyonOrani / 100;
+
+            const gunFaktoru = vade / 360;
+            const temelOran = maliyetFaktoru + karFaktoru;
+            const bsmvDahilFaiz = temelOran * (1 + bsmvFaktoru);
+            const toplamMaliyet = bsmvDahilFaiz + (komisyonFaktoru / (gunFaktoru || 1));
+            
+            const efektifFaiz = toplamMaliyet * 100;
+            const yalinFaiz = kaynakMaliyeti + brutKarMarji;
+            const bsmvEtkisi = yalinFaiz * (bsmvOrani / 100);
+
+            // Arayüze yazdırma işlemleri
+            document.getElementById('sonucEfektif').innerText = '%' + efektifFaiz.toFixed(2);
+            document.getElementById('sonucYalin').innerText = '%' + yalinFaiz.toFixed(2);
+            document.getElementById('sonucBsmv').innerText = '%+' + bsmvEtkisi.toFixed(2);
+        }
+
+        // Sayfa ilk açıldığında hesaplamayı çalıştır
+        window.onload = hesapla;
+    </script>
+</body>
+</html>
